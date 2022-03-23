@@ -12,6 +12,8 @@ deltaIl = 0.02*Il;
 deltaVc = 0.05*Vc;
 l = K*T*(Vi-Vc)/(deltaIl);
 c = (1/8)*(T*T/l)*(1-K)*(Vc/deltaVc);
+%syms s
+%Gnom = (Vi/(l*c))*s/(s*s+(1/(R*c)*s)+(1/(l*c)))
 
  %% modelo de espacio de estados: 
  A = [  0       -1/l ;
@@ -19,14 +21,15 @@ c = (1/8)*(T*T/l)*(1-K)*(Vc/deltaVc);
  B = [   Vi/l    ;
          0     ];
  
- C = [0 1];
- D = [0];
+ C = [0 1;
+     0 1/R];
+ D = [0; 0];
 
  spaceStateModel = ss(A,B,C,D)
  Gs = tf (spaceStateModel)
- %GsIlk = Gs(1,1)
- %GsVcK = Gs(2,1)
+ GsIlk = Gs(2,1)
+ GsVcK = Gs(1,1)
 
- step(Gs)
- rlocus(Gs)
- disp('')
+% step(Gs)
+% rlocus(Gs)
+% disp('')
